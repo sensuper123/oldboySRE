@@ -89,6 +89,29 @@ operator:x:11:0:operator:/root:/sbin/nologin
 方法二：
 [root@oldboy-study-lys find]# find /lvyusen/find/ -type f -name '*.txt' | xargs ls -lh 
 
+9.find与打包压缩，找出文件并压缩
+方法一：``
+[root@oldboy-study-lys ~]# tar zcvf /lvyusen/find.tar.gz `find /lvyusen/find -type f -name '*.txt'`
+方法二：|
+[root@oldboy-study-lys ~]# find /lvyusen/find/ -type f -name '*.txt' |xargs tar zcvf /lvyusen/find.tar.gz 
+方法三：exec + '\ || +'
+exec + \ 有坑 ,执行方式：找到一个文件压缩一次
+exec + + : 执行方式：找到所有文件后再交给exec执行
+
+[root@oldboy-study-lys ~]# find /lvyusen/find/ -type f -name '*.txt' -exec tar zcf /lvyusen/find-exec.tar.gz {} \;
+
+[root@oldboy-study-lys ~]# find /lvyusen/find/ -type f -name '*.txt' -exec tar zcvf /lvyusen/find.tar.gz {} +
+
+10.find与复制移动，find找出文件然后复制
+方法一：``
+[root@oldboy-study-lys ~]# cp ` find /lvyusen/find/ -type f -name '*.txt' ` /tmp/
+
+方法二：管道 cp -t 
+[root@oldboy-study-lys ~]# find /lvyusen/find/ -type f -name  '*.txt' |xargs cp -t /tmp/find/
+
+方法三：exec + \
+[root@oldboy-study-lys ~]# find /lvyusen/find/ -type f -name '*.txt' -exec cp {} /tmp/find/ \;
+
 ```
 ![image.png](https://lvyusen-1316126434.cos.ap-guangzhou.myqcloud.com/images/202410070343113.png?imageSlim)
 
