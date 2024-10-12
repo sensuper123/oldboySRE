@@ -87,7 +87,7 @@ operator:x:11:0:operator:/root:/sbin/nologin
 方法一：
 [root@oldboy-study-lys find]# ll -h `find /lvyusen/find/ -type f -name '*.txt'` | wc -l //10
 方法二：
-[root@oldboy-study-lys find]# find /lvyusen/find/ -type f -name '*.txt' | xargs ls -lh 
+[root@oldboy-study-lys find]# find /lvyusen/find/ -type f -name '*.txt' | xargs ls -lh | wc -l
 
 9.find与打包压缩，找出文件并压缩
 方法一：``
