@@ -33,12 +33,29 @@ date=`date +%F`
 cp -av /etc /backup/etc$date
 echo -e "\033[33m备份完成\033[0m"  
 ```
+# 删除改移动脚本
+```bash
+#!/bin/bash
+curenTime=`date +%F_%T`
+dir=/tmp/curenTime
+mkdir -p dir
+mv $* dir
+echo "rm is complited ,if you want replace ,pleace go to $dir"
+```
+# 磁盘大于80%脚本
+```bash
+#!/bin/bash
+diskUsed=`df -h | egrep "root|sd*" |tr -s " " "%" |cut -d"%" -f5 |sort -rn | head -1`
+[ $diskUsed -ge 80 ] && echo -e "\033[31m diskUsed > 80% \033[0m"|| echo -e "\033[32mdisk nomal\033[0m"
+```
 # 普通变量和环境变量
 ```bash
 普通变量定义
 name=value
 环境变量定义
 export name=value
+查看全部环境变量
+env
 
 普通变量只能在当前脚本或shell使用，脚本直接运行，会启动一个子shell，变量会与父shell进行隔离，即时在脚本内部定义了环境变量，也只是影响到子shell，而影响不到父shell
 ```
@@ -77,4 +94,15 @@ echo "this is 10st ${10}"
 echo "this is 11st ${11}"
 echo "this is all $*" #所有参数
 echo "this is allNum $#" #参数个数
+```
+# shell简单运算
+```bash
+x=10
+y=20
+let z=x+y
+z=$[x+y]
+z=((x+y))
+首选第一二种
+例如显示系统信息脚本，可以把颜色改成随机的
+colorStart="\033[$[RANDOM%7+31]"
 ```
