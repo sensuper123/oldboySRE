@@ -48,6 +48,14 @@ echo "rm is complited ,if you want replace ,pleace go to $dir"
 diskUsed=`df -h | egrep "root|sd*" |tr -s " " "%" |cut -d"%" -f5 |sort -rn | head -1`
 [ $diskUsed -ge 80 ] && echo -e "\033[31m diskUsed > 80% \033[0m"|| echo -e "\033[32mdisk nomal\033[0m"
 ```
+# 添加用户脚本
+```bash
+#!/bin/bash
+[ $# -eq 0] && echo "需要用户名" && exit
+id $1 >/dev/null && echo "用户已经存在" && exit
+useradd $1 >/dev/null 2>&1 
+echo 1 | passwd --stdin $1
+```
 # 普通变量和环境变量
 ```bash
 普通变量定义
@@ -92,7 +100,8 @@ echo "this is 1st $1" #第一个参数
 echo "this is 2st $2"
 echo "this is 10st ${10}"
 echo "this is 11st ${11}"
-echo "this is all $*" #所有参数
+echo "this is all $*" #所有参数，参数整合成一体
+echo "this is all $@" #所有参数，参数一个一个的
 echo "this is allNum $#" #参数个数
 ```
 # shell简单运算
@@ -105,4 +114,54 @@ z=((x+y))
 首选第一二种
 例如显示系统信息脚本，可以把颜色改成随机的
 colorStart="\033[$[RANDOM%7+31]"
+```
+# &&、||
+	短路与
+		前面为假，执行后面命令
+		 前面为真，依旧执行后面命令
+	 短路或
+		 前面为真，结束执行
+		 前面为假，执行后面命令
+
+# test 
+	作用：评估表达式，如果正确，例如 str1 = str2 ,则返回一个0，如果评估错误，则返回非0
+```bash
+val1=hello
+val2=nihao
+test $val1 = $val2 && echo "相同" || echo "不相同"
+
+n=10
+m=20
+test $n -eq $m && echo "相等" || echo "不相等"
+-eq : 相等
+-ge : 大于等于
+-gt : 大于
+-le : 小于等于
+-lt : 小于
+
+除了test 用法，还可以使用[] 用法
+比较两个数大小
+[ "$n" -eq "$m" ] && echo "相等" || echo "不相等"
+
+比较两个字符串是否相同
+FILE1=file1；FILE2=file2;
+[ "$FILE1" = "$FILE2" ] && echo "相同" || echo "不相同"
+
+注意：在中括号内变量最好还是添加双引号，如果不添加，比较的时候，当变量为空时，会报格式错误，而如果添加了，尽管变量为空，当加了字符串，相当于比较空串。不会报格式错误
+
+支持正则表达式
+str="test.sh" | [[ str=~".sh$" ]] && echo ".sh"  || echo "not .sh"
+
+两个判断
+第一种，双中括号和单中括号判断，需要&&来连接两个判断
+FILE=/lvyusen/test.sh; [[ "$FILE" =~ \.sh$ ]] && [ -x "$FILE" ] && $FILE
+
+第二种，两个判断都可以写在单括号内，则用-a 、-o 来链接两个判断
+
+FILE=/lvyusen/test.sh; [ -e "$FILE" -a -x "$FILE" ] && $FILE
+
+```
+# 取ip正则
+```bash
+egrep -o  "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 ```
