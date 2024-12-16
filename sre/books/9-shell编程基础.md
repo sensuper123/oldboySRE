@@ -56,6 +56,53 @@ id $1 >/dev/null && echo "用户已经存在" && exit
 useradd $1 >/dev/null 2>&1 
 echo 1 | passwd --stdin $1
 ```
+# 鸡兔同笼脚本
+```bash
+#!/bin/bash
+read -p "Please input head": HEAD
+read -p "Please input foot": FOOT
+rabbit=$[ (FOOT-35-35)/2 ]
+cook=$[ $HEAD - $rabbit ]
+echo "rabbit num is $rabbit"
+echo "cook num is $cook"
+```
+# yesOrNo脚本
+```bash
+#!/bin/bash
+read -p "Please input yes or not": code
+[[ "$code" =~ ^[Yy]([Ee][Ss])?$ ]] && { echo "agree" ; exit; }
+[[ "$code" =~ ^[Nn][On]?$ ]] && { echo "not agree" ; exit; }
+echo "you choose is false"
+```
+# yseOrNo Case版本脚本
+```bash
+#!/bin/bash
+read -p "Please input yes or not": code
+case $code in
+[Yy]|[Yy][Ee][Ss])
+	echo "yse"
+	;;
+[Nn]|[Nn][Oo])
+	echo "no"
+	;;
+esac
+```
+# 判断age脚本
+```bash
+#!/bin/bash
+read -p "Please input your age :" AGE
+if [[ ! "$AGE" =~ ^[0-9]+$ ]];then
+        echo "Please input number"
+elif [ "$AGE" -le 18 ];then
+        echo "good good study"
+elif [ "$AGE" -le 60 ];then
+        echo "good good work"
+elif [ "$AGE" -le 120 ];then
+        echo "good enjoy"
+else
+        echo "good to die"
+fi
+```
 # 普通变量和环境变量
 ```bash
 普通变量定义
@@ -117,8 +164,8 @@ colorStart="\033[$[RANDOM%7+31]"
 ```
 # &&、||
 	短路与
-		前面为假，执行后面命令
-		 前面为真，依旧执行后面命令
+		前面为假，结束执行
+		前面为真，依旧执行后面命令
 	 短路或
 		 前面为真，结束执行
 		 前面为假，执行后面命令
@@ -150,7 +197,7 @@ FILE1=file1；FILE2=file2;
 注意：在中括号内变量最好还是添加双引号，如果不添加，比较的时候，当变量为空时，会报格式错误，而如果添加了，尽管变量为空，当加了字符串，相当于比较空串。不会报格式错误
 
 支持正则表达式
-str="test.sh" | [[ str=~".sh$" ]] && echo ".sh"  || echo "not .sh"
+str="test.sh" ; [[ "$str" =~ \.sh$ ]] && echo ".sh"  || echo "not .sh"
 
 两个判断
 第一种，双中括号和单中括号判断，需要&&来连接两个判断
