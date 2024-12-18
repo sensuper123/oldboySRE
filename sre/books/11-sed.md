@@ -56,3 +56,7 @@ echo  /etc/sysconfig/network-scripts/ | sed -r 's@(^/.*/)[^/]+/?$@\1@'
 ```bash
  sed -n '/linux16/s#.*#& net.ifnames=0#p' /boot/grub2/grub.cfg 
 ```
+## 查找光盘不同架构有多少rpm包
+```bash
+[root@oldboy-study-lvyusen Packages]# ls *.rpm | sed -nr 's/.*\.(.*)\.rpm$/\1/p' | wc -l
+```
