@@ -131,3 +131,87 @@ esac
 done
 
 ```
+# 监控磁盘使用率报警while read
+```bash
+#!/bin/bash
+df | sed -rn "/^\/dev/s#^([^[:space:]]+).* ([0-9]+)%.*#\1 \2#p" | while read diskName used
+do
+        if ((used >= 14)); then
+                echo "$diskName is will full , used $used"
+        fi
+done
+```
+# select生成菜单
+```bash
+#!/bin/bash
+PS3="please input num: "
+select MENU in fotiaoqiang mangtou baicai longxia quit
+do
+        case $REPLY in
+        1)
+         echo "$MENU price is \$20"
+         ;;
+        2)
+         echo "$MENU price is \$2"
+         ;;
+        3)
+         echo "$MENU price is \$5"
+         ;;
+        4)
+         echo "$MENU price is $100"
+         ;;
+        5)
+         break
+         ;;
+        *)
+         echo "please input num"
+         ;;
+        esac
+done
+```
+# function调用，实现score判断
+```bash
+functions file
+	#函数实现判断是否数字
+	func_isDigit(){
+		if [[ $# eq 0]]; then
+		 echo "not a digit"
+		 return 10
+		elif [[ $1 ~= ^[[:digit:]]+$ ]]; then
+		 return true
+		else
+		 echo "please input a number"
+		 return false
+}
+
+score.sh file
+	source functions
+	read -p "请输入你的成绩: " SCORE
+	func_isDigit $SCORE
+	if [ $? -ne 0  ]; then
+	        exit
+	else
+	        if [ $SCORE -lt 60 ]; then
+	         echo "so lower"
+	        elif [ $SCORE -lt 80 ]; then
+	         echo "nomoal"
+	        else
+	         echo "good"
+	        fi
+	fi
+
+```
+# 求阶层
+```bash 
+#!/bin/bash
+read -p "please input num: " NUM
+fun_recursive(){
+        if [ $1 -le 0 ]; then
+         echo 1
+        else
+         local prev_num=$(fun_recursive $(($1-1)))
+         echo $(($1 * prev_num))
+        fi
+}
+fun_recursive $NUM
+```
