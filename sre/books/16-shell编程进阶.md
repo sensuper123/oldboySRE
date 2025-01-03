@@ -71,3 +71,63 @@ do
 done
 
 ```
+# 随机生成十个数，输出最大值，最小值
+```bash
+#!/bin/bash
+max=$RANDOM
+min=$max
+for((i=0; i<9; i++))
+do
+	num=$RANDOM
+	if((max < num)); then
+		max=$num
+	elif((num < minx)); then
+		min=$num
+	fi
+done
+echo max=$max , min=$min
+```
+# 监控服务，关闭了自动重启
+```bash
+#!/bin/bash
+while true
+do
+	skillall -0 httpd &>/dev/null
+	if(($? > 0)); then
+	systemctl restart httpd
+	echo "At `date +%F_%T` httpd is restart" | tee -a /var/log/httdStart.log
+	sleep 3
+done
+```
+# 菜单
+```bash
+#!/bin/bash
+cat <<EOF
+1.fotiaoqiang
+2.mangtou
+3.baicai
+4.longxia
+EOF
+while true
+do
+read -p "请输入菜名编号:" NUM
+case $NUM in
+1)
+        echo "fotiaoqiang price is \$20"
+        ;;
+2)
+        echo "mantou price is \$2"
+        ;;
+3)
+        echo "baicai price is \$5"
+        ;;
+4)
+        echo "longxia price is $100"
+        ;;
+*)
+        echo "please input num"
+        ;;
+esac
+done
+
+```
