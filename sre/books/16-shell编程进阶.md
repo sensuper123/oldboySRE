@@ -1,4 +1,4 @@
-# 使用循环创建用户
+# for in 使用循环创建用户
 ```bash
 #!/bin/bash
 for i in {1..10}
@@ -16,7 +16,7 @@ do
 	echo "user$i is created"
 done
 ```
-# 批量改名
+# for in 批量改名
 ```bash
 #!/bin/bash
 for fullName in `ls`
@@ -25,7 +25,7 @@ do
 	mv $fullName $name.html
 done
 ```
-# 网络扫描
+# for in 网络扫描
 ```bash
 #实现测试主机能否ping通
 #!/bin/bash
@@ -39,7 +39,7 @@ do
 done
 wait
 ```
-# 九九表
+# for in九九表
 ```bash
 #!/bin/bash
 color="\033["
@@ -52,7 +52,7 @@ do
 	echo 
 done
 ```
-# 打印等腰三角形
+# for 打印等腰三角形
 ```bash
 #!/bin/bash
 read -p "请输入行数:" LINE
@@ -71,7 +71,7 @@ do
 done
 
 ```
-# 随机生成十个数，输出最大值，最小值
+# for 随机生成十个数，输出最大值，最小值 
 ```bash
 #!/bin/bash
 max=$RANDOM
@@ -87,7 +87,7 @@ do
 done
 echo max=$max , min=$min
 ```
-# 监控服务，关闭了自动重启
+# while 监控服务，关闭了自动重启
 ```bash
 #!/bin/bash
 while true
@@ -99,7 +99,7 @@ do
 	sleep 3
 done
 ```
-# 菜单
+# while 菜单
 ```bash
 #!/bin/bash
 cat <<EOF
@@ -131,7 +131,7 @@ esac
 done
 
 ```
-# 监控磁盘使用率报警while read
+# while read 监控磁盘使用率报警
 ```bash
 #!/bin/bash
 df | sed -rn "/^\/dev/s#^([^[:space:]]+).* ([0-9]+)%.*#\1 \2#p" | while read diskName used
@@ -141,7 +141,7 @@ do
         fi
 done
 ```
-# select生成菜单
+# select 生成菜单
 ```bash
 #!/bin/bash
 PS3="please input num: "
@@ -201,7 +201,7 @@ score.sh file
 	fi
 
 ```
-# 求阶层
+# recursive 求阶层
 ```bash 
 #!/bin/bash
 read -p "please input num: " NUM
@@ -214,4 +214,117 @@ fun_recursive(){
         fi
 }
 fun_recursive $NUM
+```
+# trap 信号捕捉处理
+```bash
+trap "echo press ctrl + c" 2 # 捕捉ctrl + c 并修改操作
+trap -p #打印使用了trap
+for((i=0;i<10;i++))
+do
+	echo $i
+	sleep 1
+done
+
+trap "" 2 # 捕捉ctrl + c 并修改操作,不作响应
+for((i=10;i<20;i++))
+do
+	echo $i
+	sleep 1
+done
+
+trap "-" 2 # 捕捉ctrl + c 并恢复默认操作
+for((i=20;i<30;i++))
+do
+	echo $i
+	sleep 1
+done
+
+```
+# trap finish exit
+```bash
+执行完成或者中途退出都会执行finish函数，做收尾工作
+finish(){
+	echo finish is run
+}
+for((i=0;i<5;i++))
+do
+	echo $i
+	sleep 1
+done
+```
+# 数组赋值
+![image.png](https://lvyusen-1316126434.cos.ap-guangzhou.myqcloud.com/images/202501050136988.png?imageSlim)
+# 数组引用
+```bash
+arryList[0]=wang
+arryList[1]=zhang
+echo ${arryList[0]} #wang
+
+arryList=(1 2 3)
+echo ${arryList[0]} #1
+
+arryList1=([0]=1 [1]=2 [2]=3)
+echo ${arryList[2]} #3
+
+read -a arryList
+
+declare -A menu
+menu=([mantou]=￥2 [baicai]=￥4 [tufu]=￥5)
+echo ${menu[mantou]} #￥2
+
+```
+# 数组 监控磁盘
+```bash
+#/bin/bash
+declare -A arry_diskInfo
+df | grep "^/dev" > disk.log
+while read line
+do
+        index=`echo $line |  sed -rn "s#^([^[:space:]]+).*#\1#p"`
+        arry_diskInfo[$index]=`echo $line | sed -rn "s#.* ([0-9]+)%.*#\1#p"`
+        if (( ${arry_diskInfo[$index]} > 8 )); then
+                echo $index will full used ${arry_diskInfo[$index]}
+        fi
+done < disk.log
+
+```
+# 数组 大小比较
+```bash
+
+#/bin/bash
+declare -a arry_random
+for((i=0;i<10;i++))
+do
+        arry_random[$i]=$RANDOM
+        if ((i==0)); then
+                MAX=${arry_random[$i]}
+                MIN=$MAX
+        else
+        (( ${arry_random[$i]} > $MAX)) && { MAX=${arry_random[$i]};continue; }
+        (( ${arry_random[$i]} < $MIN)) &&  MIN=${arry_random[$i]}
+        fi
+done
+echo ${arry_random[*]}
+echo MAX=$MAX MIN=$MIN
+
+```
+# expect 实现自动化
+```bash
+#!/bin/bash
+ip=$1
+user=$2
+password=$3
+expect <<EOF
+set timeout 10
+spawn ssh $user@$ip
+expect {
+"yes/no" { send "yes\n";exp_continue }
+"password" { send "$password\n" }
+}
+expect "]#" { send "useradd hehe\n" }
+expect "]#" { send "echo magedu |passwd --stdin hehe\n" }
+expect "]#" { send "exit\n" }
+expect eof
+EOF
+#./ssh5.sh 192.168.8.100 root magedu
 ```
