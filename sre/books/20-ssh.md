@@ -119,3 +119,4 @@ ssh -D 10.0.0.210 -fNg
 ## ssh优化
 + UseDNS no
 + GSSAPIAuthentication no
+## dropbear 和 文件完整性监控aide 22-04
