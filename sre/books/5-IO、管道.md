@@ -13,7 +13,7 @@ command > filename.all 2 > &1
 command 2>filename.all 1>&2
 
 多行文本创建文件
-cat <<EFO>>filename
+cat < EFO>>filename
 
 ```
 # tr小工具
