@@ -117,3 +117,56 @@ vim /var/named/10.0.0.zone
 		allow-transfer {10.0.0.210;};
 	
 ```
+# dns创建子域
+## 父域子域在同一台dns服务器
+```bash
+cp /var/named/lvyusen.com.zone /var/named/beijing.lvyusen.com.zone -p
+
+vim /etc/named.rfc1912.zones
+	zone "beijing.lvyusen.com" IN {
+		type master;
+		file "beijing.lvyusen.com.zone";
+	};
+```
+## 父域子域不同服务器
+```bash
+1.父服务器
+	vim /var/named/lvyusen.com.zone #添加zhengzhou服务器信息
+		zhengzhou NS ns3
+		ns3   A  10.0.0.220
+	vim /etc/named.conf
+		dnssec-enable no;
+        dnssec-validation no;
+
+2.子服务器 
+	yum install -y bind
+	vim /etc/named.conf
+		 //      listen-on-v6 port 53 { ::1; };
+		 //      allow-query     { localhost; };
+	vim /etc/rfc
+		zone "zhengzhou.lvyusen.com" IN {
+			type master;
+			file "zhengzhou.lvyusen.com.zone";
+		};
+vim /var/named/zhengzhou.lvyusen.com.zone
+	$TTL 1D
+	@	SOA master.lvyusen.com. admin.lvyusen.com. (1 1D 1H 1W 1H )
+			NS master
+	master	A	10.0.0.220
+	websrv  A   5.5.5.5
+	www     CNAME websrv
+```
+
+## 转发
+```bash
+1.能连接外网的dns服务器
+	yum install -y bind
+	vim /etc/named.conf
+		//      listen-on-v6 port 53 { ::1; };
+		//      allow-query     { localhost; };
+2.转发服务器
+	vim /etc/named.conf
+	forward first|only;
+	forward {10.0.0.200;};
+	
+```
