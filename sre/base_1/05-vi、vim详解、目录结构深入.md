@@ -1,5 +1,5 @@
 ## vim工作模式图
-![image.png](https://s2.loli.net/2024/09/11/cyvDghHARZESa2d.png)
+![image.png|650](https://s2.loli.net/2024/09/11/cyvDghHARZESa2d.png)
 ## vim快捷键
 ![image.png](https://s2.loli.net/2024/09/11/Dr2nGphj3E8uTYe.png)
 ![image.png](https://s2.loli.net/2024/09/11/J5ytnsRIaOuGFeL.png)
